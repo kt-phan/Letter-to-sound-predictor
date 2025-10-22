@@ -18,17 +18,27 @@ For this milestone, we implement a **Decision Tree classifier** trained on align
 ## ⚙️ Environment Setup
 ## 1. Create the Environment
 
-In your project folder, run:
-
+In your project folder, run the following to create the virtual environment (only needs to happen once on set-up):
 ```bash
 python -m venv .venv
+```
+To activate the virtual environment on subsequent logins you must run the below commands:
 
 Windows:
+```bash
 .venv\Scripts\activate
+```
 
 Mac/Linux:
+```bash
 source .venv/bin/activate
+```
 
+Finall, to install any necessary libraries:
+```bash
 pip install -r requirements.txt
-
-
+```
+To close the virtual environment, run:
+```bash
+deactivate
+```
