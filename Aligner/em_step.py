@@ -109,7 +109,7 @@ def main():
     # perform Expectation-Maximization
     association_matrix = em_step(data)
     np.save(MATRIX_FILE, association_matrix)
-    print(f"Successfully saved the final association matrix to {matrix_file}.")
+    print(f"Successfully saved the final association matrix to {MATRIX_FILE}.")
     
 if __name__ == "__main__":
     main()
