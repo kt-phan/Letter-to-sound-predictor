@@ -7,8 +7,8 @@ import pandas as pd
 import numpy as np
 from symbols import CMU_SYMBOLS, GRAPHEME_LIST
 from dp_utilities import needleman_wunsch, trace_back
-MATRIX_FILE = 'association_matrix.npy'
 
+MATRIX_FILE = 'association_matrix.npy'
 NUM_PHONEMES = len(CMU_SYMBOLS)
 NUM_GRAPHEMES = len(GRAPHEME_LIST)
 NULL_GRAPHEME = '$'
@@ -93,7 +93,6 @@ def em_step(data):
         A_new = update_table(data, A_old)  
         print(f'--- Iteration {i} ---')
         print(f'Total score of A = {A_old.sum()}') 
-        # print(f'A new sum = {A_new.sum()}') 
         i += 1
         if has_converged(A_old, A_new, tolerance=1e-6):
             print('A has converged!')

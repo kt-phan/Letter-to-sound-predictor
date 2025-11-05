@@ -54,6 +54,16 @@ def main():
     data['Alignment'] = data.apply(align, axis=1, args=(A,))
     print('Alignment complete.')
     
+    # takes out entries with the null grapheme (the new line)
+    print('\nFiltering out alignments containing the null grapheme ($)...')
+    # Filter rows where the 'Alignment' list contains a tuple with '$'
+    data = data[
+        data['Alignment'].apply(
+            lambda alignment_list: not any('$' in pair for pair in alignment_list)
+        )
+    ].reset_index(drop=True)
+    print('Filtering complete.')
+    
     # store dataFrame
     print()
     output_path = '../cmu_dict_cleaned_filtered_aligned.csv'
