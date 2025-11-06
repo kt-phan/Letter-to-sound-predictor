@@ -42,3 +42,15 @@ To close the virtual environment, run:
 ```bash
 deactivate
 ```
+## Filtering
+## Alignment
+## Machine Learning
+### 1. Decision Trees
+### 2. K-Nearest Neighbours
+
+## CItations
+Black, A. W., Lenzo, K., & Pagel, V. (1998). Issues in building general letter to sound rules.
+
+Damper, R. I., Marchand, Y., Marsters, J. D., & Bazin, A. I. (2005). Aligning text and phonemes for speech technology applications using an EM-like algorithm. International Journal of Speech Technology, 8(2), 147-160.
+
+
