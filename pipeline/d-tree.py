@@ -9,24 +9,30 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
-
 import feature_extraction as fe
+import word_evaluation as wle
+
 
 def main():
     
   # --- 1. Load and Extract Raw Data ---
   raw_df = pd.read_csv("data/processed_data/cmu_dict_cleaned_filtered_aligned.csv")
-  data_df = fe.extract_features(raw_df)
 
-  # --- 2. Define X and y (Raw) ---
-  X_features = data_df['features'] # This is a Series of lists of strings
-  y_target = data_df['target']   # This is a Series of phoneme strings
-
-  # --- 3. Split Data  ---
-  X_train_raw, X_test_raw, y_train, y_test = train_test_split(
-      X_features, y_target, test_size=0.2, random_state=42, stratify=y_target
+  # --- 2. Split Data  ---
+  train_words, test_words = train_test_split(
+      raw_df, 
+      test_size=0.2, 
+      random_state=42
   )
-  print(f"Data split: Train samples={len(y_train)}, Test samples={len(y_test)}")
+
+
+  # --- 3. Define X and y (Raw) ---
+  train_features_df = fe.extract_features(train_words)
+  test_features_df = fe.extract_features(test_words)
+  X_train_raw = train_features_df['features']
+  y_train = train_features_df['target']
+  X_test_raw = test_features_df['features']
+  y_test = test_features_df['target']
 
   # --- 4. Encode Data for Decision Tree ---
   # A) Get the pre-fitted grapheme "key"
@@ -54,5 +60,16 @@ def main():
   accuracy = accuracy_score(y_test_enc, y_pred)
   print(f"Model Test Accuracy: **{accuracy:.4f}**")
 
+  # Phoneme-level accuracy
+  accuracy = accuracy_score(y_test_enc, y_pred)
+  print(f"Phoneme-Level Accuracy: **{accuracy:.4f}**")
+
+    # Word-level accuracy
+  wle.evaluate_model_word_level(
+        test_words,  # ← CHANGED: Pass the actual test words dataframe
+        dt_classifier, 
+        grapheme_encoder, 
+        phoneme_encoder
+    )
 if __name__ == "__main__":
     main()  

@@ -98,7 +98,7 @@ def encode_features(feature_series, grapheme_encoder):
     Returns:
         np.ndarray: A 2D NumPy array of the label-encoded features.
     """
-    print("Applying LabelEncoder to features...")
+    #print("Applying LabelEncoder to features...")
     # Use .transform() on each list in the Series
     X_encoded_list = [grapheme_encoder.transform(f) for f in feature_series]
     
