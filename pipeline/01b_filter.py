@@ -1,6 +1,7 @@
 import re
 from nltk.stem import WordNetLemmatizer
 
+
 lemmatizer = WordNetLemmatizer()
 
 def singular_form(word):
