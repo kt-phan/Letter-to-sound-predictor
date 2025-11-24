@@ -41,6 +41,7 @@ To close the virtual environment, run:
 ```bash
 deactivate
 ```
+---
 ## Pipeline
 ### Download data
 ### Filtering
@@ -58,7 +59,7 @@ python pipeline/02b_align.py
 ### Machine Learning
 #### 1. Decision Trees
 #### 2. K-Nearest Neighbours
-
+---
 ## CItations
 Black, A. W., Lenzo, K., & Pagel, V. (1998). Issues in building general letter to sound rules.
 
