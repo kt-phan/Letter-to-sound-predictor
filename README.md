@@ -44,10 +44,17 @@ deactivate
 ---
 ## Pipeline
 ### Download data
+### Cleaning
 ### Filtering
+This script processes the raw CMU Pronouncing Dictionary data (```cmu_dict_cleaned.csv```) to create a clean, non-redundant dictionary, outputting to  ```cmu_dict_cleaned_filtered.csv```. It first normalizes words  to their singular noun base form, ensuring only one entry per root word (e.g., keeping "CAT" and skipping "CATS"). It then cleans pronunciations by removing numerical stress markers (like AH0 to AH) and filters out possessives ('s) and words shorter than four letters.
+
+Usage:
+```
+python pipeline/01b_filter.py
+```
 ### Alignment
 Here, we implemented automatic one-to-one alignment based on descriptions provided by Damper et al. (2005). Our aligner uses dynamic programming (specifically the Needleman-Wunsch algorithm) as well as  the Expectation-Maximum algorithm.
-First, we can run the command below, which iteratively computes an association matrix A until convergence. Each entry of A represents the degree of association between any grapheme-phoneme pair. 
+First, we can run the command below, which iteratively computes an association matrix A until convergence and save the natrix under the file ```association_matrix.np```. Each entry of A represents the degree of association between any grapheme-phoneme pair. 
 ```bash
 python pipeline/02a_em_step.py
 ```
