@@ -8,15 +8,14 @@
 
 ---
 
-## 🧠 Project Overview
+## Project Overview
 Our project aims to build a **grapheme-to-phoneme (G2P) converter**, which predicts how a written word should be pronounced.  
 The system takes a **word as input** and outputs a **sequence of phonemes** by classifying each letter based on its surrounding context.  
 For this milestone, we implement a **Decision Tree classifier** trained on aligned letter–phoneme pairs extracted from the **CMU Pronouncing Dictionary**.
 
 ---
 
-## ⚙️ Environment Setup
-## 1. Create the Environment
+## Environment Setup
 
 In your project folder, run the following to create the virtual environment (only needs to happen once on set-up):
 ```bash
@@ -42,11 +41,23 @@ To close the virtual environment, run:
 ```bash
 deactivate
 ```
-## Filtering
-## Alignment
-## Machine Learning
-### 1. Decision Trees
-### 2. K-Nearest Neighbours
+## Pipeline
+### Download data
+### Filtering
+### Alignment
+Here, we implemented automatic one-to-one alignment based on descriptions provided by Damper et al. (2005). Our aligner uses dynamic programming (specifically the Needleman-Wunsch algorithm) as well as  the Expectation-Maximum algorithm.
+First, we can run the command below, which iteratively computes an association matrix A until convergence. Each entry of A represents the degree of association between any grapheme-phoneme pair. 
+```bash
+python pipeline/02a_em_step.py
+```
+The matrix A is then used to generate alignments using dynamic programming where we try to maximize the total association scores. Running the followign script will pexcecute the alignment process: 
+```bash
+python pipeline/02b_align.py
+```
+### Feature extraction
+### Machine Learning
+#### 1. Decision Trees
+#### 2. K-Nearest Neighbours
 
 ## CItations
 Black, A. W., Lenzo, K., & Pagel, V. (1998). Issues in building general letter to sound rules.
