@@ -50,7 +50,7 @@ First, we can run the command below, which iteratively computes an association m
 ```bash
 python pipeline/02a_em_step.py
 ```
-The matrix A is then used to generate alignments using dynamic programming where we try to maximize the total association scores. Running the followign script will pexcecute the alignment process: 
+The matrix A is then used to generate alignments using dynamic programming, in which we try to maximize the total association scores. Running the following script will excecute the alignment process: 
 ```bash
 python pipeline/02b_align.py
 ```
