@@ -24,7 +24,7 @@ def parse_alignment(alignment_string):
     except (ValueError, SyntaxError):
         return []
 
-def extract_features(data_df, context_size=2):
+def extract_features(data_df, context_size=3):
     """
     Transforms the raw CMU DataFrame into a feature-target DataFrame.
     
@@ -32,7 +32,7 @@ def extract_features(data_df, context_size=2):
     
     Args:
         data_df (pd.DataFrame): The DataFrame loaded from the raw CSV.
-        context_size (int): The window size (e.g., 2 for +/- 2 context).
+        context_size (int): The window size (e.g., 3 for +/- 3 context).
 
     Returns:
         pd.DataFrame: A DataFrame with columns:
@@ -42,7 +42,7 @@ def extract_features(data_df, context_size=2):
                       - 'word_id': the unique index of the word
                       - 'original_word': the word string
     """
-    print('\nExtracting features from raw data...')
+    print(f'\nExtracting features from raw data (Context Size: {context_size})...')
     feature_target_pairs = []
     boundary_marker = '_'
     
@@ -59,6 +59,7 @@ def extract_features(data_df, context_size=2):
             left_context = [letters[i - j - 1] if i - j - 1 >= 0 else boundary_marker for j in range(context_size)]
             right_context = [letters[i + j + 1] if i + j + 1 < len(letters) else boundary_marker for j in range(context_size)]
             
+            # Note: left_context is generated [i-1, i-2...], so we reverse it to be [i-2, i-1]
             feature = left_context[::-1] + [letters[i]] + right_context
             
             feature_target_pairs.append({

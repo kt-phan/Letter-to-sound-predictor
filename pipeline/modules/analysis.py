@@ -5,6 +5,8 @@ Generates plots for:
 2. Phoneme Performance (Horizontal Bar Chart)
 3. Accuracy by Word Length (Line Chart)
 4. Hardest Words List
+
+UPDATED: Labels changed to PREDICTION TIME and accepts context_size.
 '''
 
 import matplotlib.pyplot as plt
@@ -36,10 +38,10 @@ def plot_model_comparison(results_dict):
     ax1.set_title('Model Accuracy Comparison')
     ax1.legend()
     
-    # Plot 2: Training Time
-    ax2.plot(models, times, marker='o', color='red', linestyle='--')
-    ax2.set_title('Training Time (seconds)')
-    ax2.set_ylabel('Time (s)')
+    # Plot 2: Prediction Time (CHANGED TITLES)
+    ax2.plot(models, times, marker='o', color='purple', linestyle='--')
+    ax2.set_title('Prediction Time (for 1000 words)')
+    ax2.set_ylabel('Time (seconds)')
     
     plt.tight_layout()
     plt.savefig('data/analysis_output/analysis_model_comparison.png')
@@ -61,7 +63,7 @@ def analyze_phoneme_performance(y_true, y_pred, phoneme_encoder):
     # Save CSV
     df_rep.to_csv("data/analysis_output/analysis_phoneme_metrics.csv")
     
-    # --- NEW: PLOT BEST AND WORST PHONEMES ---
+    # --- PLOT BEST AND WORST PHONEMES ---
     df_sorted = df_rep.sort_values(by='f1-score', ascending=True) # Sort by F1
     
     # Get Bottom 10 and Top 10
@@ -82,21 +84,17 @@ def analyze_phoneme_performance(y_true, y_pred, phoneme_encoder):
     
     plt.tight_layout()
     plt.savefig('data/analysis_output/analysis_phoneme_performance.png')
-    print("Saved 'data/analysis_output/analysis_phoneme_performance.png' (Visualizes hard vs. easy sounds)")
+    print("Saved 'data/analysis_output/analysis_phoneme_performance.png'")
 
 
-def plot_accuracy_by_word_length(test_df, models, model_names, g_enc, p_enc):
+def plot_accuracy_by_word_length(test_df, models, model_names, g_enc, p_enc, context_size):
     """
-    NEW: Plots a line chart showing how accuracy changes as words get longer.
-    Useful for seeing if HMM/Hybrid handles long words better than DT.
+    Plots a line chart showing how accuracy changes as words get longer.
     """
     print("\n--- Generating Accuracy by Word Length Plot ---")
     
-    # Prepare data structure
-    # length_stats = { length: { 'total': 0, 'DT_correct': 0, ... } }
     length_stats = {}
     
-    # We iterate through the test set (this uses the Eval Subset passed from train_models)
     for _, row in test_df.iterrows():
         word_len = len(row['Word'])
         target = row['Pronunciation']
@@ -111,13 +109,12 @@ def plot_accuracy_by_word_length(test_df, models, model_names, g_enc, p_enc):
         
         # Check each model
         for model, name in zip(models, model_names):
-            pred = wle.get_word_predictions(alignment, model, g_enc, p_enc)
+            pred = wle.get_word_predictions(alignment, model, g_enc, p_enc, context_size)
             if pred == target:
                 length_stats[word_len][name] += 1
 
     # Convert to DataFrame for plotting
     lengths = sorted(length_stats.keys())
-    # Filter out lengths with too few samples (noise)
     valid_lengths = [l for l in lengths if length_stats[l]['total'] >= 5]
     
     plt.figure(figsize=(10, 6))
@@ -142,14 +139,13 @@ def plot_accuracy_by_word_length(test_df, models, model_names, g_enc, p_enc):
     print("Saved 'data/analysis_output/analysis_accuracy_by_length.png'")
 
 
-def analyze_word_errors(test_df, models, model_names, g_enc, p_enc):
+def analyze_word_errors(test_df, models, model_names, g_enc, p_enc, context_size):
     """
     Finds 'Hardest Words': Words that ALL models got wrong.
     """
     print("\n--- Word Error Analysis ---")
     
     results = []
-    # Use the provided subset
     for _, row in test_df.iterrows():
         word = row['Word']
         target = row['Pronunciation']
@@ -159,7 +155,7 @@ def analyze_word_errors(test_df, models, model_names, g_enc, p_enc):
         failures = 0
         
         for model, name in zip(models, model_names):
-            pred = wle.get_word_predictions(alignment, model, g_enc, p_enc)
+            pred = wle.get_word_predictions(alignment, model, g_enc, p_enc, context_size)
             entry[f'Pred_{name}'] = pred
             if pred != target:
                 failures += 1
@@ -169,7 +165,6 @@ def analyze_word_errors(test_df, models, model_names, g_enc, p_enc):
         
     results_df = pd.DataFrame(results)
     
-    # Filter for words where Failures == len(models) (All models got it wrong)
     hardest_words = results_df[results_df['Failures'] == len(models)]
     
     print(f"Found {len(hardest_words)} words (in sample) that NO model predicted correctly.")
