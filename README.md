@@ -33,7 +33,7 @@ Mac/Linux:
 source .venv/bin/activate
 ```
 
-Finall, to install any necessary libraries:
+Finally, to install any necessary libraries:
 ```bash
 pip install -r requirements.txt
 ```
